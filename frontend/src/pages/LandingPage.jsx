@@ -48,13 +48,19 @@ const HeroSection = () => (
       </h1>
       
       {/* Subheadline */}
-      <p className="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+      <p className="text-lg sm:text-xl text-slate-600 mb-4 max-w-2xl mx-auto leading-relaxed">
         En 2 minutos revisamos tu caso y te decimos si puedes negociar, esperar o defenderte.
+      </p>
+      
+      {/* Curiosity hook */}
+      <p className="text-base sm:text-lg text-slate-700 mb-8 max-w-xl mx-auto font-medium">
+        Algunas deudas ya no se pueden cobrar. Otras sí.<br />
+        <span className="text-blue-600">Aquí te digo cuál es tu caso.</span>
       </p>
       
       {/* Primary CTA */}
       <CTAButton variant="giant" data-testid="hero-cta">
-        REVISAR MI CASO AHORA
+        QUIERO SABER SI DEBO PAGAR
       </CTAButton>
       
       {/* Trust text */}
@@ -188,7 +194,7 @@ const StepsSection = () => {
         
         <div className="text-center">
           <CTAButton variant="giant">
-            PICA AQUÍ Y REVISA TU CASO
+            QUIERO SABER SI DEBO PAGAR
           </CTAButton>
         </div>
       </div>
@@ -208,7 +214,7 @@ const UrgencySection = () => (
       </div>
       
       <CTAButton variant="giant" className="!bg-white !text-blue-600 hover:!bg-slate-100">
-        REVISAR MI CASO AHORA
+        QUIERO SABER SI DEBO PAGAR
       </CTAButton>
     </div>
   </section>
