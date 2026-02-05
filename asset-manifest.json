@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/deudasmexico/static/css/main.3010842d.css",
+    "main.js": "/deudasmexico/static/js/main.b457ccdd.js",
+    "index.html": "/deudasmexico/index.html",
+    "main.3010842d.css.map": "/deudasmexico/static/css/main.3010842d.css.map",
+    "main.b457ccdd.js.map": "/deudasmexico/static/js/main.b457ccdd.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3010842d.css",
+    "static/js/main.b457ccdd.js"
+  ]
+}

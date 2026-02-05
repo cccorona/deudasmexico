@@ -5,7 +5,7 @@ import LandingPage from "./pages/LandingPage";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter basename="/deudasmexico">
         <Routes>
           <Route path="/" element={<LandingPage />} />
         </Routes>
