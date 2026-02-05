@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/deudasmexico/static/css/main.3010842d.css",
-    "main.js": "/deudasmexico/static/js/main.b457ccdd.js",
-    "index.html": "/deudasmexico/index.html",
-    "main.3010842d.css.map": "/deudasmexico/static/css/main.3010842d.css.map",
-    "main.b457ccdd.js.map": "/deudasmexico/static/js/main.b457ccdd.js.map"
+    "main.css": "/static/css/main.3010842d.css",
+    "main.js": "/static/js/main.1c46502e.js",
+    "index.html": "/index.html",
+    "main.3010842d.css.map": "/static/css/main.3010842d.css.map",
+    "main.1c46502e.js.map": "/static/js/main.1c46502e.js.map"
   },
   "entrypoints": [
     "static/css/main.3010842d.css",
-    "static/js/main.b457ccdd.js"
+    "static/js/main.1c46502e.js"
   ]
 }
