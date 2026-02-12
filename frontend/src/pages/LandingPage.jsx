@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ShieldCheck, 
   FileWarning, 
@@ -11,25 +11,68 @@ import {
   MessageCircle,
   Search,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
 
-const CTA_LINK = "https://agentos-dev.vercel.app/f/buro-legal";
+// URL de AgentOS QA (decoy siempre apunta ahí). DECOY_SIGNING_SECRET está en el env de AgentOS QA.
+const QA_BOT_URL = 'https://qa.umbralhq.io';
+const DECOY_API = `${QA_BOT_URL}/api/decoy-url?slug=buro-legal`;
+
+function useDecoyCTA() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const handleClick = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(DECOY_API);
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data?.error || 'Error al obtener enlace');
+      }
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return { handleClick, loading, error };
+}
 
 const CTAButton = ({ className = "", variant = "default", children }) => {
+  const { handleClick, loading, error } = useDecoyCTA();
   const baseClasses = "cta-button";
   const variantClasses = variant === "giant" ? "cta-button-giant" : "";
-  
+
   return (
-    <a 
-      href={CTA_LINK}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${baseClasses} ${variantClasses} ${className}`}
-      data-testid="cta-button"
-    >
-      {children}
-    </a>
+    <div className="inline-block">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={loading}
+        className={`${baseClasses} ${variantClasses} ${className} ${loading ? 'opacity-80 cursor-wait' : ''}`}
+        data-testid="cta-button"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="w-5 h-5 mr-2 animate-spin inline" />
+            Cargando…
+          </>
+        ) : (
+          children
+        )}
+      </button>
+      {error && (
+        <p className="mt-2 text-sm text-red-600" data-testid="cta-error">
+          Error al conectar. Intenta de nuevo.
+        </p>
+      )}
+    </div>
   );
 };
 
@@ -243,19 +286,22 @@ const Footer = () => (
   </footer>
 );
 
-const StickyCTA = () => (
-  <div className="sticky-cta-container md:hidden" data-testid="sticky-cta-container">
-    <a 
-      href={CTA_LINK}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="sticky-cta"
-      data-testid="sticky-cta"
-    >
-      QUIERO SABER SI DEBO PAGAR
-    </a>
-  </div>
-);
+const StickyCTA = () => {
+  const { handleClick, loading } = useDecoyCTA();
+  return (
+    <div className="sticky-cta-container md:hidden" data-testid="sticky-cta-container">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={loading}
+        className={`sticky-cta ${loading ? 'opacity-80 cursor-wait' : ''}`}
+        data-testid="sticky-cta"
+      >
+        {loading ? 'Cargando…' : 'QUIERO SABER SI DEBO PAGAR'}
+      </button>
+    </div>
+  );
+};
 
 const LandingPage = () => {
   return (
