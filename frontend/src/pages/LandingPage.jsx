@@ -286,32 +286,14 @@ const Footer = () => (
   </footer>
 );
 
-const StickyCTA = () => {
-  const { handleClick, loading } = useDecoyCTA();
-  return (
-    <div className="sticky-cta-container md:hidden" data-testid="sticky-cta-container">
-      <button
-        type="button"
-        onClick={handleClick}
-        disabled={loading}
-        className={`sticky-cta ${loading ? 'opacity-80 cursor-wait' : ''}`}
-        data-testid="sticky-cta"
-      >
-        {loading ? 'Cargando…' : 'QUIERO SABER SI DEBO PAGAR'}
-      </button>
-    </div>
-  );
-};
-
 const LandingPage = () => {
   return (
-    <div className="landing-container pb-sticky-cta" data-testid="landing-page">
+    <div className="landing-container" data-testid="landing-page">
       <HeroSection />
       <FeaturesSection />
       <StepsSection />
       <UrgencySection />
       <Footer />
-      <StickyCTA />
     </div>
   );
 };
