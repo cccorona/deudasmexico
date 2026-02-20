@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   ShieldCheck, 
   FileWarning, 
@@ -19,12 +19,17 @@ import {
 const QA_BOT_URL = 'https://qa.umbralhq.io';
 const DECOY_API = `${QA_BOT_URL}/api/decoy-url?slug=buro-legal`;
 
-function useDecoyCTA() {
+function useDecoyCTA(trackSection) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const isSubmitting = useRef(false);
   const handleClick = async (e) => {
     e.preventDefault();
-    if (loading) return;
+    if (isSubmitting.current || loading) return;
+    isSubmitting.current = true;
+    if (typeof window.umami !== 'undefined' && trackSection) {
+      window.umami.track('cta-click', { seccion: trackSection });
+    }
     setLoading(true);
     setError(null);
     try {
@@ -39,13 +44,14 @@ function useDecoyCTA() {
       setError(true);
     } finally {
       setLoading(false);
+      isSubmitting.current = false;
     }
   };
   return { handleClick, loading, error };
 }
 
-const CTAButton = ({ className = "", variant = "default", children }) => {
-  const { handleClick, loading, error } = useDecoyCTA();
+const CTAButton = ({ className = "", variant = "default", trackSection, children }) => {
+  const { handleClick, loading, error } = useDecoyCTA(trackSection);
   const baseClasses = "cta-button";
   const variantClasses = variant === "giant" ? "cta-button-giant" : "";
 
@@ -102,7 +108,7 @@ const HeroSection = () => (
       </p>
       
       {/* Primary CTA */}
-      <CTAButton variant="giant" data-testid="hero-cta">
+      <CTAButton variant="giant" trackSection="hero" data-testid="hero-cta">
         QUIERO SABER SI DEBO PAGAR
       </CTAButton>
       
@@ -177,7 +183,7 @@ const FeaturesSection = () => {
         </div>
         
         <div className="text-center">
-          <CTAButton variant="giant">
+          <CTAButton variant="giant" trackSection="features">
             QUIERO SABER SI DEBO PAGAR
           </CTAButton>
         </div>
@@ -236,7 +242,7 @@ const StepsSection = () => {
         </div>
         
         <div className="text-center">
-          <CTAButton variant="giant">
+          <CTAButton variant="giant" trackSection="steps">
             QUIERO SABER SI DEBO PAGAR
           </CTAButton>
         </div>
@@ -256,7 +262,7 @@ const UrgencySection = () => (
         </p>
       </div>
       
-      <CTAButton variant="giant" className="!bg-white !text-blue-600 hover:!bg-slate-100">
+      <CTAButton variant="giant" trackSection="urgency" className="!bg-white !text-blue-600 hover:!bg-slate-100">
         QUIERO SABER SI DEBO PAGAR
       </CTAButton>
     </div>
@@ -275,7 +281,7 @@ const Footer = () => (
         No sustituye asesoría legal personalizada.
       </p>
       
-      <CTAButton variant="giant">
+      <CTAButton variant="giant" trackSection="footer">
         QUIERO SABER SI DEBO PAGAR
       </CTAButton>
       
@@ -287,6 +293,21 @@ const Footer = () => (
 );
 
 const LandingPage = () => {
+  const mountedAt = useRef(Date.now());
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && typeof window.umami !== 'undefined') {
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollDepth = scrollHeight > 0 ? Math.round((window.scrollY / scrollHeight) * 100) : 0;
+        const timeOnPage = Math.round((Date.now() - mountedAt.current) / 1000);
+        window.umami.track('page-leave', { scroll_depth: scrollDepth, time_on_page: timeOnPage });
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
   return (
     <div className="landing-container" data-testid="landing-page">
       <HeroSection />
